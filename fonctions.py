@@ -37,8 +37,87 @@ def nettoyer_texte(serie):
     )
 
 
+# --------------------------------------------------------------
+# 2.Fonction pour automatiser la création d'une colonne "Statut"
+# --------------------------------------------------------------
+def ajouter_colonne_statut_precis(df):
+    """
+    Création de la colonne Statut.
+    """
+    df_copy = df.copy()
+    # Dictionnaire des correspondances pour les valeurs non numériques
+    statut = {
+        "F": "Fermé",
+        "NA": "NA",
+        "NC": "NA",
+        "Retrait d'appelaltion": "Retrait d'appellation",  # Corrige la coquille au passage
+        "Retrait d'appellation": "Retrait d'appellation",
+        "SO": "Sans Objet",
+        "Transfert à Marseille - MUCEM": "Transfert",
+        "Transfert à Nice": "Transfert"
+    }
+
+    # On applique le dictionnaire
+    df_copy["Statut"] = df_copy["frequentation"].replace(statut)
+
+    # On s'assure que les vraies valeurs vides (NaN) deviennent "NA"
+    df_copy["Statut"] = df_copy["Statut"].fillna("NA")
+
+    # Si la ligne a un chiffre valide dans freq_net, le statut devient "ouvert"
+    df_copy.loc[df_copy["freq_net"].notna(), "Statut"] = "Ouvert"
+
+    return df_copy
+
+# -----------------------------------------
+# 3.Fonction pour la création de graphique comparant
+# les féquentations de de musées en fonction de type de musée
+# ----------------------------------------
+
+
+def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='frequentation'):
+    """
+    Automatise la création de graphiques comparant la fréquentaion des musées
+    par an en fonction du type de musée (payant, gratuit, total)
+
+    Parameters
+    ----------
+    bases_de_donnees : dictionnaire
+    dictionnaire contenant en valeur les base de données
+
+    an : int
+    Pour que faire les manipulations panda nom de la colonne année
+
+    an : int
+    idem, ici c'est frequentation
+    """
+    # On parcourt notre dictionnaire pour tracer chaque courbe
+    for nom_courbe, df in bases_de_donnees.items():
+
+        # Pour les analyses descriptives on ne gadre que les musées ouverts
+        df_propre = df[df['Statut'] == 'Ouvert']
+
+        # On étudie la fréquentation totale, par an
+        freq_annee = df_propre.groupby(an)[freq].sum()
+        freq_annee.index = freq_annee.index.astype(int)
+
+        # On trace la courbe
+        plt.plot(freq_annee.index, freq_annee, marker='o', linewidth=2, label=nom_courbe)
+
+    plt.title('Comparaison des variations des fréquentations', fontsize=14, fontweight='bold')
+    plt.xlabel('Année', fontsize=12)
+    plt.ylabel('Fréquentation', fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.7)
+
+    # On affiche les année à 45°
+    plt.xticks(freq_annee.index, rotation=45) 
+
+    # la légende
+    plt.legend(title='Types de données', fontsize=11)
+    plt.show()
+
+
 # --------------------------------------------------
-# 2. Fonction principale de cartographie
+# 4. Fonction principale de cartographie
 # --------------------------------------------------
 def carto_frequentation_region(
     df,
