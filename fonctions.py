@@ -74,7 +74,7 @@ def ajouter_colonne_statut_precis(df):
 # ----------------------------------------
 
 
-def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='frequentation'):
+def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='freq_net'):
     """
     Automatise la création de graphiques comparant la fréquentaion des musées
     par an en fonction du type de musée (payant, gratuit, total)
@@ -103,7 +103,7 @@ def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='frequen
         # On trace la courbe
         plt.plot(freq_annee.index, freq_annee, marker='o', linewidth=2, label=nom_courbe)
 
-    plt.title('Comparaison des variations des fréquentations', fontsize=14, fontweight='bold')
+    plt.title('Comparaison des évolutions des fréquentations', fontsize=14, fontweight='bold')
     plt.xlabel('Année', fontsize=12)
     plt.ylabel('Fréquentation', fontsize=12)
     plt.grid(True, linestyle='--', alpha=0.7)
@@ -122,7 +122,7 @@ def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='frequen
 def carto_frequentation_region(
     df,
     annee,
-    col_freq="frequentation",
+    col_freq="freq_net",
     col_region="NOMREG",
     col_annee="annee",
     cmap="OrRd",
