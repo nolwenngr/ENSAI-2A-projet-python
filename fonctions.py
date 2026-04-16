@@ -4,9 +4,6 @@ import matplotlib.pyplot as plt
 import unicodedata
 
 
-# --------------------------------------------------
-# 1. Fonction pour nettoyer les noms de régions
-# --------------------------------------------------
 def nettoyer_texte(serie):
     """
     Automatise la standardisation d'une série de chaîne de caractères.
@@ -37,9 +34,6 @@ def nettoyer_texte(serie):
     )
 
 
-# --------------------------------------------------------------
-# 2.Fonction pour automatiser la création d'une colonne "Statut"
-# --------------------------------------------------------------
 def ajouter_colonne_statut_precis(df):
     """
     Création de la colonne Statut.
@@ -67,11 +61,6 @@ def ajouter_colonne_statut_precis(df):
     df_copy.loc[df_copy["freq_net"].notna(), "Statut"] = "Ouvert"
 
     return df_copy
-
-# -----------------------------------------
-# 3.Fonction pour la création de graphique comparant
-# les féquentations de de musées en fonction de type de musée
-# ----------------------------------------
 
 
 def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='freq_net'):
@@ -116,9 +105,6 @@ def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='freq_ne
     plt.show()
 
 
-# --------------------------------------------------
-# 4. Fonction principale de cartographie
-# --------------------------------------------------
 def carto_frequentation_region(
     df,
     annee,
@@ -128,6 +114,20 @@ def carto_frequentation_region(
     cmap="OrRd",
     figsize=(10, 10)
 ):
+
+    """
+    Représente sur une carte de la France métropolitaine la fréquentation par région
+
+    Parameters
+    ----------
+    
+
+    Returns
+    -------
+    
+     """
+
+
     # Télécharger le fond de carte des régions
     regions = carti_download(
         values=["France"],
