@@ -116,17 +116,41 @@ def carto_frequentation_region(
 ):
 
     """
-    Représente sur une carte de la France métropolitaine la fréquentation par région
+    Représente une carte de la France métropolitaine montrant la fréquentation
+    agrégée par région pour une année donnée, classée en quartiles.
 
     Parameters
     ----------
-    
+    df : pandas.DataFrame
+        Table contenant les données de fréquentation. Elle doit inclure au moins :
+        - une colonne d'année
+        - une colonne de nom de région
+        - une colonne de fréquentation
+
+    annee : int ou str
+        Année à représenter sur la carte.
+
+    col_freq : str, default="freq_net"
+        Nom de la colonne contenant la fréquentation à agréger.
+
+    col_region : str, default="NOMREG"
+        Nom de la colonne contenant les noms des régions dans df.
+
+    col_annee : str, default="annee"
+        Nom de la colonne contenant l'année dans df.
+
+    cmap : str, default="OrRd"
+        Palette de couleurs utilisée pour la représentation cartographique.
+
+    figsize : tuple, default=(10, 10)
+        Taille de la figure matplotlib, sous la forme `(largeur, hauteur)`.
 
     Returns
     -------
-    
-     """
-
+    geopandas.GeoDataFrame
+        GeoDataFrame issu de la jointure entre le fond de carte des régions et les
+        données agrégées de fréquentation.
+    """
 
     # Télécharger le fond de carte des régions
     regions = carti_download(
