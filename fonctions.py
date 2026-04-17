@@ -76,7 +76,7 @@ def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='freq_ne
     an : int
     Pour que faire les manipulations panda nom de la colonne année
 
-    an : int
+    freq : int
     idem, ici c'est frequentation
     """
     # On parcourt notre dictionnaire pour tracer chaque courbe
