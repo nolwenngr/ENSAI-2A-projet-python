@@ -34,6 +34,37 @@ def nettoyer_texte(serie):
     )
 
 
+def nettoyer_frequentation(df):
+    """
+    Nettoie la colonne de fréquentation d'un DataFrame :
+    - Crée une colonne numérique 'freq_net'
+    - Corrige la coquille sur 'appellation'
+
+    Parameters
+    ----------
+    df : DataFrame
+    Base de données que l'on veut nettoyer
+
+    Return
+    ------
+    df_clean : DataFrame
+    Base de données nettoyées
+    """
+    # On fait une copie
+    df_clean = df.copy()
+
+    # Création de la colonne numérique
+    df_clean["freq_net"] = pd.to_numeric(df_clean["frequentation"], errors="coerce")
+
+    # Correction de la coquille
+    df_clean["frequentation"] = (
+        df_clean["frequentation"]
+        .replace("Retrait d'appelaltion", "Retrait d'appellation")
+        )
+
+    return df_clean
+
+
 def ajouter_colonne_statut_precis(df):
     """
     Création de la colonne Statut.
@@ -98,10 +129,96 @@ def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='freq_ne
     plt.grid(True, linestyle='--', alpha=0.7)
 
     # On affiche les année à 45°
-    plt.xticks(freq_annee.index, rotation=45) 
+    plt.xticks(freq_annee.index, rotation=45)
 
     # la légende
     plt.legend(title='Types de données', fontsize=11)
+    plt.show()
+
+
+def generer_carte_musees(df_donnees, an):
+    """
+    Prend en entrée un DataFrame contenant les musées et affiche
+    directement la carte choroplèthe par région, avec le nombre de musées affiché.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Table contenant les données de fréquentation. Elle doit inclure au moins :
+        - une colonne de nom de région (NOMREG)
+        - une colonne de référence du musée (REF DU MUSEE)
+    an : str
+        Année pour laquelle on souhaite faire la carte
+    """
+    # Selection de l'année
+    df_donnees = df_donnees[df_donnees['annee'] == an]
+
+    # Agrégation des données
+    nb_musees_reg = (
+        df_donnees
+        .groupby("NOMREG", as_index=False)["REF DU MUSEE"]
+        .nunique()
+    )
+    nb_musees_reg = nb_musees_reg.rename(columns={"REF DU MUSEE": "nb_musees"})
+
+    # Téléchargement du fond de carte
+    regions = carti_download(
+        values=["France"],
+        crs=4326,
+        borders="REGION",
+        vectorfile_format="geojson",
+        simplification=50,
+        filter_by="FRANCE_ENTIERE_DROM_RAPPROCHES",
+        source="EXPRESS-COG-CARTO-TERRITOIRE",
+        year=2022
+    )
+
+    # Nettoyage des textes et jointure
+    nb_musees_reg["REGION_CLEAN"] = nettoyer_texte(nb_musees_reg['NOMREG'])
+    regions["REGION_CLEAN"] = nettoyer_texte(regions["LIBELLE_REGION"])
+    carte = regions.merge(nb_musees_reg, on="REGION_CLEAN", how="left")
+    carte['nb_musees'] = carte['nb_musees'].fillna(0)
+
+    # Création et affichage de la carte
+    fig, ax = plt.subplots(1, 1, figsize=(12, 10))
+
+    carte.plot(
+        column="nb_musees",
+        ax=ax,
+        cmap="OrRd",
+        edgecolor="black",
+        linewidth=0.8,
+        legend=True,
+        legend_kwds={
+            'label': "Nombre de musées",
+            'orientation': "vertical",
+            'shrink': 0.7
+        }
+    )
+
+    # Ajout du nombre de musées sur la carte
+    for idx, row in carte.iterrows():
+        if row.geometry is not None:
+            point = row.geometry.representative_point()
+
+            # On récupère le nombre
+
+            valeur = int(row['nb_musees'])
+            # On ajoute le texte sur la carte
+            ax.annotate(
+                text=str(valeur),
+                xy=(point.x, point.y),
+                horizontalalignment='center',
+                verticalalignment='center',
+                fontsize=10,
+                fontweight='bold',
+                color='black'
+            )
+
+    plt.title("Répartition des musées par région", fontsize=16, fontweight='bold')
+    plt.axis("off")
+
+    # Affichage final
     plt.show()
 
 
