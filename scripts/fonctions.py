@@ -175,21 +175,8 @@ def generer_carte_musees(df_donnees, an):
     )
     nb_musees_reg = nb_musees_reg.rename(columns={"REF DU MUSEE": "nb_musees"})
 
-    # Téléchargement du fond de carte
-    regions = carti_download(
-        values=["France"],
-        crs=4326,
-        borders="REGION",
-        vectorfile_format="geojson",
-        simplification=50,
-        filter_by="FRANCE_ENTIERE_DROM_RAPPROCHES",
-        source="EXPRESS-COG-CARTO-TERRITOIRE",
-        year=2022
-    )
-
     # Nettoyage des textes et jointure
     nb_musees_reg["REGION_CLEAN"] = nettoyer_texte(nb_musees_reg['NOMREG'])
-    regions["REGION_CLEAN"] = nettoyer_texte(regions["LIBELLE_REGION"])
     carte = regions.merge(nb_musees_reg, on="REGION_CLEAN", how="left")
     carte['nb_musees'] = carte['nb_musees'].fillna(0)
 
@@ -283,18 +270,6 @@ def carto_frequentation_region(
         données agrégées de fréquentation.
     """
 
-    # Télécharger le fond de carte des régions
-    regions = carti_download(
-        values=["France"],
-        crs=4326,
-        borders="REGION",
-        vectorfile_format="geojson",
-        simplification=50,
-        filter_by="FRANCE_ENTIERE_DROM_RAPPROCHES",
-        source="EXPRESS-COG-CARTO-TERRITOIRE",
-        year=2022
-    )
-
     # Copie des données
     data = df.copy()
 
@@ -312,10 +287,6 @@ def carto_frequentation_region(
 
     # Nettoyer les noms de régions pour la jointure
     freq_region["REGION_CLEAN"] = nettoyer_texte(freq_region[col_region])
-
-    col_region_carte = "LIBELLE_REGION"
-
-    regions["REGION_CLEAN"] = nettoyer_texte(regions[col_region_carte])
 
     # Jointure entre les données et le fond de carte
     carte = regions.merge(freq_region, on="REGION_CLEAN", how="left")
