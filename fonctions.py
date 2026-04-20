@@ -136,6 +136,20 @@ def tracer_comparaison_frequentation(bases_de_donnees, an='annee', freq='freq_ne
     plt.show()
 
 
+# La cartographie nécessite la chargement de cette base de données
+regions = carti_download(
+        values=["France"],
+        crs=4326,
+        borders="REGION",
+        vectorfile_format="geojson",
+        simplification=50,
+        filter_by="FRANCE_ENTIERE_DROM_RAPPROCHES",
+        source="EXPRESS-COG-CARTO-TERRITOIRE",
+        year=2022
+    )
+regions["REGION_CLEAN"] = nettoyer_texte(regions["LIBELLE_REGION"])
+
+
 def generer_carte_musees(df_donnees, an):
     """
     Prend en entrée un DataFrame contenant les musées et affiche
@@ -326,3 +340,42 @@ def carto_frequentation_region(
     plt.show()
 
     return carte
+
+
+def carto_beaux_arts_themes(df, theme):
+    """
+    Affiche la carte de France où chaque région est colorée 
+    selon la fréquence d'UN thème spécifique.
+    """
+    # On garde un seul musée par ligne pour ne pas fausser le compte
+    df_unique = df.drop_duplicates(subset=['IDMuseofile']).copy()
+
+    # On fait la somme du thème par région
+    stats_region = df_unique.groupby("NOMREG", as_index=False)[theme].sum()
+
+    # Préparation pour la jointure avec la carte
+    stats_region["REGION_CLEAN"] = nettoyer_texte(stats_region["NOMREG"])
+
+    # Jointure avec ton fond de carte (GeoDataFrame)
+    carte = regions.merge(stats_region, on="REGION_CLEAN", how="left")
+
+    # Création de la carte
+    fig, ax = plt.subplots(figsize=(12, 10))
+
+    carte.plot(
+        column=theme,
+        cmap="OrRd",
+        edgecolor="0.4",
+        legend=True,
+        legend_kwds={'label': f"Nombre de présences du thème : {theme}"},
+        missing_kwds={"color": "lightgrey"},
+        ax=ax
+    )
+
+    # Titre qui s'adapte au thème choisi
+    ax.set_title(f"Répartition du thème '{theme}' par région",
+                 fontsize=16, fontweight='bold', pad=20)
+    ax.axis("off")
+
+    plt.tight_layout()
+    plt.show()
