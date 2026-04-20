@@ -1,3 +1,13 @@
-# ENSAI-2A-projet-python
+## Analyse de la fréquentation des musées en France entre 2001 et 2016
 
-pip install -r requirement.txt
+Par *Eulalie Amigo & Nolwenn Gorgé, ENSAI 2026*.
+
+Les musées, en tant qu’institutions centrales de la diffusion du patrimoine et de la culture, sont des indicateurs sensibles des pratiques culturelles des populations, des politiques publiques en matière d’accès à la culture, et des évolutions sociétales plus larges. La période 2001-2016 est particulièrement intéressante car elle coïncide avec des réformes majeures, comme la loi de 2002 qui a redéfini le statut des musées en France, ainsi qu’avec des changements dans les comportements de visite (gratuités, diversification des publics, etc.). En effet, en 2001, les musées en France n’avaient pas encore l’appellation unique de « Musées de France ». Ils étaient classés en deux catégories : les musées « classés » (reconnus par l’État pour leur intérêt public) et les musées « contrôlés » (soumis à un contrôle scientifique et technique de l’État). Ces distinctions reflétaient une organisation héritée du XIXe siècle, avec des musées nationaux (comme le Louvre) et des musées locaux ou régionaux, souvent gérés par les collectivités. En janvier 2002, la loi relative aux musées de France est promulguée. Elle unifie le statut des musées en créant l’appellation « Musée de France », qui s’applique automatiquement aux musées nationaux et aux musées classés, puis aux musées contrôlés à partir de février 2003. Cette loi renforce les missions des musées : conservation, restauration, étude et diffusion des collections, mais aussi accès du plus grand nombre à la culture. Elle impose aussi des obligations en matière de gestion, de sécurité et de qualité des expositions, ce qui a pu influencer la fréquentation (meilleure attractivité, mais aussi parfois des fermetures temporaires pour mise aux normes).
+
+Cependant, les observateurs économiques sont à l’unisson : tous constatent pour 2016 une chute du tourisme international en France de 7 %, et de 11 % si on se concentre sur la capitale. La cause ? Les attentats de janvier et novembre 2015 à Paris, ainsi que celui du 14 juillet 2016 à Nice.
+
+# Installation des dépendances nécessaires
+Installez les dépendances nécessaires listées dans le fichier requirements.txt avec la commande `pip install -r requirements.txt`.
+
+# Structure du projet
+Le projet s'articule en trois parties. La première partie "nettoyage" importe les bases de données, unifie des noms de variables, analyse la non réponse totale et partielle et créer les variables utiles aux analyses suivantes. La seconde partie "réalise quelques analyses descriptives sur nos données notamment avec de la cartographie. Enfin, la troisième partie réalise un clustering. Les scripts sont présents dans le dossier "scripts".
