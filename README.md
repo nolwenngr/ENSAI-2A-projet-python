@@ -28,8 +28,8 @@ L'analyse croise les trois jeux de données suivants :
 
 * **[Fréquentation totale des Musées de France 2001-2016](https://static.data.gouv.fr/resources/frequentation-des-musees-de-france-1/20250827-121955/frequentation-totale-mdf-2001-a-2016-data-def9.xlsx) (Excel)**
     * **Description :** Données retraçant l'évolution de la fréquentation globale des musées de France sur une période de 15 ans.
-    * **Producteur :** Ministère de la Culture / Data.gouv.fr.
+    * **Producteur :** Ministère de la Culture.
 
 * **[Base Muséofile - Répertoire des musées de France](https://object.data.gouv.fr/ministere-culture/POP/museofile.csv) (CSV)**
     * **Description :** Le répertoire officiel contenant les métadonnées de chaque établissement ayant l'appellation "Musée de France" (identifiant unique, localisation géographique, domaines thématiques, statut juridique, etc.).
-    * **Producteur :** Ministère de la Culture (Plateforme POP).
+    * **Producteur :** Ministère de la Culture.
