@@ -4,3 +4,4 @@ cartiflette
 mapclassify
 matplotlib
 scikit-learn
+great_tables
